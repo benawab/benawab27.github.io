@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>STATIC / WHITE NOISE — EarPods Vision</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000000;
+            font-family: 'Times New Roman', 'Garamond', serif;
+            overflow-x: hidden;
+            color: #e0e0e0;
+            cursor: none;
+        }
+
+        /* STATIC NOISE OVERLAY */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.05"/></svg>');
+            background-repeat: repeat;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0.45;
+        }
+
+        /* custom cursor */
+        .custom-cursor {
+            position: fixed;
+            width: 28px;
+            height: 28px;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+        }
+        .custom-cursor span {
+            font-size: 24px;
+            color: rgba(255,255,255,0.75);
+            text-shadow: 0 0 12px rgba(255,255,255,0.6);
+            animation: cursorFlicker 2.2s ease-in-out infinite;
+            display: inline-block;
+        }
+        @keyframes cursorFlicker {
+            0%, 100% { opacity: 0.6; transform: scale(1); text-shadow: 0 0 5px white; }
+            50% { opacity: 1; transform: scale(1.15); text-shadow: 0 0 20px white; }
+        }
+
+        /* MENU — درست شده، همه لینک‌ها همین افکت رو دارن */
+        .menu {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 30px;
+            background: rgba(20, 20, 25, 0.35);
+            backdrop-filter: blur(12px);
+            padding: 10px 28px;
+            border-radius: 60px;
+            z-index: 100;
+            border: 0.5px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .menu a {
+            color: #b0b0b0;
+            text-decoration: none;
+            font-size: 13px;
+            letter-spacing: 2.5px;
+            transition: 0.45s cubic-bezier(0.2, 0.9, 0.4, 1.2);
+            font-family: 'Times New Roman', serif;
+            text-transform: uppercase;
+            font-weight: 300;
+        }
+        .menu a:hover {
+            color: #ffffff;
+            text-shadow: 0 0 8px rgba(255,255,240,0.9);
+            letter-spacing: 15px;
+        }
+
+        /* HERO SECTION */
+        .hero {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 8rem 2rem 4rem;
+            z-index: 5;
+        }
+
+        .static-overlay {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 40%, rgba(0,0,0,0.2) 0%, #000000 90%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .product-container {
+            position: relative;
+            z-index: 10;
+            margin-bottom: 2rem;
+            perspective: 900px;
+        }
+
+        .earpods-model {
+            width: 280px;
+            height: 280px;
+            margin: 0 auto;
+            position: relative;
+            animation: floatCinema 5s ease-in-out infinite;
+            filter: drop-shadow(0 0 25px rgba(255,255,240,0.15));
+        }
+        .earpods-model svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 8px 20px rgba(0,0,0,0.6));
+        }
+
+        @keyframes floatCinema {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(1.2deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        .title-glow {
+            font-size: 3.4rem;
+            letter-spacing: 10px;
+            text-transform: uppercase;
+            font-weight: 200;
+            background: linear-gradient(135deg, #f5f5f5, #aaaaaa, #dddddd);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+            filter: blur(0.3px);
+            text-shadow: 0 0 15px rgba(255,255,245,0.2);
+        }
+
+        .static-tagline {
+            font-size: 0.8rem;
+            letter-spacing: 6px;
+            color: rgba(220,220,255,0.45);
+            font-style: italic;
+            border-top: 0.5px solid rgba(255,255,255,0.2);
+            display: inline-block;
+            padding-top: 1rem;
+            margin-top: 1rem;
+        }
+
+        /* SPECS */
+        .specs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 2rem;
+            max-width: 1100px;
+            margin: 4rem auto;
+            padding: 2rem;
+            z-index: 10;
+            position: relative;
+        }
+        .spec-card {
+            background: rgba(8,8,12,0.55);
+            backdrop-filter: blur(10px);
+            padding: 1.8rem 1.2rem;
+            border-radius: 30px;
+            border: 0.3px solid rgba(255,255,255,0.1);
+            transition: 0.4s;
+            text-align: center;
+            cursor: pointer;
+        }
+        .spec-card:hover {
+            transform: translateY(-6px);
+            background: rgba(20,20,30,0.75);
+            border-color: rgba(255,255,210,0.25);
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+        .spec-icon {
+            font-size: 2.2rem;
+            margin-bottom: 0.8rem;
+            color: rgba(255,255,220,0.7);
+        }
+        .spec-title {
+            font-size: 1rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            font-weight: 400;
+        }
+        .spec-desc {
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            color: rgba(200,200,220,0.55);
+            line-height: 1.4;
+        }
+
+        .cinema-quote {
+            text-align: center;
+            margin: 2.5rem auto;
+            padding: 2rem;
+            max-width: 700px;
+            border-top: 0.3px solid rgba(255,255,255,0.08);
+            border-bottom: 0.3px solid rgba(255,255,255,0.08);
+        }
+        .cinema-quote p {
+            font-size: 1rem;
+            letter-spacing: 2px;
+            color: rgba(220,220,240,0.5);
+            font-style: italic;
+            font-weight: 300;
+        }
+
+        /* FOOTER */
+        .static-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 2rem 3rem;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(6px);
+            border-top: 0.3px solid rgba(255,255,255,0.08);
+            margin-top: 3rem;
+        }
+        .footer-left a, .footer-right a {
+            font-size: 1.4rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+        .footer-left a { color: #ccc; }
+        .footer-left a:hover { color: #fff; text-shadow: 0 0 6px white; }
+        .footer-right a { color: #ccc; }
+        .footer-right a:hover { color: #fff; text-shadow: 0 0 6px white; }
+        .footer-center {
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            color: rgba(200,200,200,0.25);
+            text-align: center;
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(20px);
+            z-index: 1500;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.active {
+            display: flex;
+            animation: fadeInModal 0.4s ease;
+        }
+        .modal-content {
+            background: rgba(5,5,10,0.85);
+            border: 0.5px solid rgba(255,255,255,0.2);
+            border-radius: 36px;
+            padding: 2rem;
+            text-align: center;
+            max-width: 480px;
+            width: 85%;
+        }
+        .modal-icon { font-size: 4rem; margin-bottom: 0.5rem; }
+        .modal-title { font-size: 1.8rem; letter-spacing: 6px; margin-bottom: 0.3rem; }
+        .modal-desc { font-size: 0.85rem; color: rgba(255,255,245,0.6); line-height: 1.5; margin: 1rem 0; }
+        .modal-close { margin-top: 1.2rem; font-size: 0.7rem; letter-spacing: 3px; color: rgba(255,255,255,0.4); cursor: pointer; }
+        @keyframes fadeInModal {
+            from { opacity: 0; backdrop-filter: blur(0px); }
+            to { opacity: 1; backdrop-filter: blur(20px); }
+        }
+
+        @media (max-width: 760px) {
+            .title-glow { font-size: 1.8rem; letter-spacing: 6px; }
+            .menu { gap: 12px; padding: 6px 16px; top: 14px; }
+            .menu a { font-size: 9px; letter-spacing: 1px; }
+            .specs { gap: 1rem; padding: 1.2rem; }
+            .earpods-model { width: 200px; height: 200px; }
+            .static-footer { flex-direction: column; gap: 1rem; padding: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="custom-cursor" id="customCursor"><span>✦</span></div>
+
+<div class="menu">
+    <a href="index.html">Home</a>
+    <a href="void.html">Void</a>
+    <a href="gallery.html">Videos</a>
+    <a href="static.html">Static</a>
+</div>
+
+<div class="hero">
+    <div class="static-overlay"></div>
+    <div class="product-container">
+        <div class="earpods-model">
+            <svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#2a2a2a"/>
+                        <stop offset="60%" stop-color="#0f0f12"/>
+                        <stop offset="100%" stop-color="#1c1c1f"/>
+                    </linearGradient>
+                </defs>
+                <ellipse cx="100" cy="95" rx="20" ry="28" fill="url(#bodyGrad)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+                <path d="M100 120 L100 155 Q100 165 108 162 L115 150" fill="none" stroke="rgba(255,255,245,0.2)" stroke-width="1.2"/>
+                <ellipse cx="100" cy="95" rx="6" ry="9" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="0.6"/>
+                <ellipse cx="200" cy="95" rx="20" ry="28" fill="url(#bodyGrad)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+                <path d="M200 120 L200 155 Q200 165 192 162 L185 150" fill="none" stroke="rgba(255,255,245,0.2)" stroke-width="1.2"/>
+                <ellipse cx="200" cy="95" rx="6" ry="9" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="0.6"/>
+                <path d="M80 85 Q95 75 110 85" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="0.8" stroke-linecap="round"/>
+                <path d="M190 85 Q200 78 215 88" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="0.8" stroke-linecap="round"/>
+                <path d="M125 140 Q150 150 175 140" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1" stroke-dasharray="3 3"/>
+                <text x="147" y="165" fill="rgba(255,255,255,0.3)" font-size="6" letter-spacing="3">✦ STATIC ✦</text>
+            </svg>
+        </div>
+    </div>
+    <h1 class="title-glow">WHITE NOISE</h1>
+    <p style="letter-spacing: 2px; font-size: 0.85rem; max-width: 500px; margin: 0 auto; color: rgba(220,220,240,0.45);">cinematic isolation. pure sound. nothing else.</p>
+    <div class="static-tagline">✦ the silence between seconds ✦</div>
+</div>
+
+<div class="specs">
+    <div class="spec-card" data-info="Adaptive EQ tailors sound in real time. Every frequency feels like a memory.">
+        <div class="spec-icon">🜁</div>
+        <div class="spec-title">Adaptive Static</div>
+        <div class="spec-desc">real‑time frequency sculpting</div>
+    </div>
+    <div class="spec-card" data-info="Up to 36 hours of immersive static field. The void never runs out.">
+        <div class="spec-icon">∞</div>
+        <div class="spec-title">Eternal Battery</div>
+        <div class="spec-desc">36h dreamcore endurance</div>
+    </div>
+    <div class="spec-card" data-info="Lossless audio that reveals the ghost layers in every track. Hear the unheard.">
+        <div class="spec-icon">🎧</div>
+        <div class="spec-title">Spectral Clarity</div>
+        <div class="spec-desc">lossless resonance</div>
+    </div>
+    <div class="spec-card" data-info="Ambient noise control blurs the line between reality and static dream.">
+        <div class="spec-icon">🌫️</div>
+        <div class="spec-title">Static Drowning</div>
+        <div class="spec-desc">adaptive noise isolation</div>
+    </div>
+</div>
+
+<div class="cinema-quote">
+    <p>❝ you are not listening to the music —<br>the music is listening to you. ❞</p>
+</div>
+
+<audio id="atmosAudio" loop style="display:none;">
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+</audio>
+
+<div class="static-footer">
+    <div class="footer-left">
+        <a href="#" id="igLink" style="font-size: 1.6rem; text-decoration: none;">🪐</a>
+    </div>
+    <div class="footer-center">
+        ✦ static frequency • eternal drift ✦
+    </div>
+    <div class="footer-right">
+        <a href="#" id="waLink" style="font-size: 1.6rem; text-decoration: none;">🌌</a>
+    </div>
+</div>
+
+<div id="specModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-icon" id="modalIcon"></div>
+        <div class="modal-title" id="modalTitle"></div>
+        <div class="modal-desc" id="modalDesc"></div>
+        <div class="modal-close" id="closeModalBtn">✦ close ✦</div>
+    </div>
+</div>
+
+<script>
+    const cursor = document.getElementById('customCursor');
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+    });
+
+    document.getElementById('igLink').href = 'https://instagram.com/prctmll';
+    document.getElementById('waLink').href = 'https://wa.me/989123456789';
+
+    const modal = document.getElementById('specModal');
+    const modalIcon = document.getElementById('modalIcon');
+    const modalTitleElem = document.getElementById('modalTitle');
+    const modalDescElem = document.getElementById('modalDesc');
+    const closeBtn = document.getElementById('closeModalBtn');
+
+    const specData = {
+        "Adaptive Static": { icon: "🜁", desc: "Adaptive EQ tailors sound in real time. Every frequency feels like a memory — a forgotten whisper in the static field." },
+        "Eternal Battery": { icon: "∞", desc: "Up to 36 hours of immersive static field. The void never runs out. Drift through the noise without awakening." },
+        "Spectral Clarity": { icon: "🎧", desc: "Lossless audio that reveals the ghost layers in every track. Hear the unheard frequencies that hide between silences." },
+        "Static Drowning": { icon: "🌫️", desc: "Ambient noise control blurs the line between reality and static dream. You are inside the white noise now." }
+    };
+
+    document.querySelectorAll('.spec-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const title = card.querySelector('.spec-title').innerText;
+            const data = specData[title];
+            if(data) {
+                modalIcon.innerText = data.icon;
+                modalTitleElem.innerText = title;
+                modalDescElem.innerText = data.desc;
+                modal.classList.add('active');
+            }
+        });
+    });
+
+    closeBtn.addEventListener('click', () => modal.classList.remove('active'));
+    modal.addEventListener('click', (e) => { if(e.target === modal) modal.classList.remove('active'); });
+
+    const atmos = document.getElementById('atmosAudio');
+    if(atmos) {
+        atmos.volume = 0.18;
+        atmos.play().catch(() => {
+            document.addEventListener('click', function playOnce() {
+                atmos.play();
+                document.removeEventListener('click', playOnce);
+            }, { once: true });
+        });
+    }
+</script>
+</body>
+</html>
+
+
+
+
+<audio id="pageMusic" loop style="display:none;">
+    <source src="" type="audio/mpeg">
+</audio>
+
+<script>
+    (function() {
+        let audio = document.getElementById('pageMusic');
+        audio.volume = 0.3;
+        
+        // تلاش برای پخش خودکار
+        audio.play().catch(() => {
+            document.body.addEventListener('click', function playOnce() {
+                audio.play();
+                document.body.removeEventListener('click', playOnce);
+            }, { once: true });
+        });
+    })();
+</script> 
