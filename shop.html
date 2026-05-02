@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>LUSICDUS — DREAMCORE PIXEL SHOP</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0f;
+            font-family: 'Courier New', 'Times New Roman', monospace;
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+
+        /* pixel dreamcore noise */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><filter id="pixel"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4"/></filter><rect width="100%" height="100%" filter="url(%23pixel)" opacity="0.05"/></svg>');
+            background-repeat: repeat;
+            pointer-events: none;
+            opacity: 0.4;
+        }
+
+        /* custom pixel cursor */
+        .custom-cursor {
+            position: fixed;
+            width: 24px;
+            height: 24px;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+        }
+        .custom-cursor span {
+            font-size: 18px;
+            color: #ffd966;
+            text-shadow: 0 0 4px gold;
+            animation: cursorPulse 2s ease-in-out infinite;
+            display: inline-block;
+        }
+        @keyframes cursorPulse {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* menu */
+        .menu {
+            position: fixed;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            background: rgba(10,10,15,0.8);
+            backdrop-filter: blur(8px);
+            padding: 6px 18px;
+            border-radius: 40px;
+            z-index: 100;
+            border: 1px solid rgba(255,215,0,0.3);
+        }
+        .menu a {
+            color: #b0b0b0;
+            text-decoration: none;
+            font-size: 11px;
+            letter-spacing: 2px;
+            transition: 0.3s;
+            text-transform: uppercase;
+            font-family: monospace;
+        }
+        .menu a:hover {
+            color: #ffd966;
+            letter-spacing: 3px;
+        }
+
+        /* dreamcore pixel ring */
+        .dreamcore-ring {
+            position: fixed;
+            top: 12px;
+            left: 12px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,215,0,0.5);
+            animation: ringPulse 4s ease-in-out infinite;
+            z-index: 50;
+            pointer-events: none;
+        }
+        .dreamcore-ring::after {
+            content: "✦";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffd966;
+            font-size: 16px;
+            animation: starGlow 2s infinite;
+        }
+        @keyframes ringPulse {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+        @keyframes starGlow {
+            0%, 100% { opacity: 0.5; text-shadow: 0 0 2px gold; }
+            50% { opacity: 1; text-shadow: 0 0 10px gold; }
+        }
+
+        /* header */
+        .shop-header {
+            text-align: center;
+            padding: 6rem 1rem 1rem;
+        }
+        .shop-header h1 {
+            font-size: 2rem;
+            letter-spacing: 8px;
+            font-weight: 300;
+            color: #ffd966;
+            text-shadow: 0 0 8px rgba(255,215,0,0.5);
+        }
+        .shop-header p {
+            letter-spacing: 4px;
+            color: rgba(255,215,0,0.5);
+            font-style: italic;
+            margin-top: 0.3rem;
+            font-size: 0.7rem;
+        }
+
+        /* main product (responsive) */
+        .product-main {
+            max-width: 1000px;
+            margin: 1rem auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            background: rgba(10,10,20,0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 1.2rem;
+            border: 1px solid rgba(255,215,0,0.2);
+        }
+        @media (min-width: 768px) {
+            .product-main {
+                flex-direction: row;
+                padding: 1.5rem;
+            }
+        }
+        .product-gallery {
+            flex: 1;
+        }
+        .main-image {
+            width: 100%;
+            max-width: 350px;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            border-radius: 20px;
+            border: 1px solid rgba(255,215,0,0.4);
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            margin-bottom: 0.8rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .thumbnail-list {
+            display: flex;
+            gap: 0.6rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .thumbnail {
+            width: 55px;
+            height: 55px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 1px solid rgba(255,215,0,0.4);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .thumbnail:hover {
+            border-color: #ffd966;
+            transform: scale(1.05);
+        }
+        .product-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+        .product-title {
+            font-size: 1.4rem;
+            letter-spacing: 2px;
+            color: #ffd966;
+        }
+        .product-price {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #fff;
+        }
+        .product-desc {
+            color: rgba(255,255,255,0.7);
+            line-height: 1.4;
+            font-size: 0.85rem;
+        }
+        .about-product {
+            background: rgba(0,0,0,0.4);
+            padding: 0.8rem;
+            border-radius: 16px;
+            font-size: 0.75rem;
+            color: rgba(255,215,0,0.8);
+        }
+        .delivery-box {
+            background: rgba(0,0,0,0.4);
+            padding: 0.6rem;
+            border-radius: 16px;
+            font-size: 0.7rem;
+        }
+        .delivery-box span {
+            color: #ffd966;
+        }
+        .btn-group {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 0.3rem;
+            flex-wrap: wrap;
+        }
+        .btn {
+            background: transparent;
+            border: 1px solid rgba(255,215,0,0.6);
+            padding: 8px 16px;
+            border-radius: 30px;
+            color: #ffd966;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: 0.3s;
+            flex: 1;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-family: monospace;
+        }
+        .btn:hover {
+            background: #ffd966;
+            color: #0a0a0f;
+            border-color: #ffd966;
+        }
+        .instagram-btn {
+            border-color: #E4405F;
+            color: #E4405F;
+        }
+        .instagram-btn:hover {
+            background: #E4405F;
+            color: #fff;
+        }
+        .whatsapp-btn {
+            border-color: #25D366;
+            color: #25D366;
+        }
+        .whatsapp-btn:hover {
+            background: #25D366;
+            color: #fff;
+        }
+
+        /* products grid (responsive) */
+        .products-grid {
+            max-width: 1000px;
+            margin: 1.5rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 1rem;
+        }
+        .product-card {
+            background: rgba(15,15,25,0.6);
+            backdrop-filter: blur(6px);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255,215,0,0.2);
+            transition: all 0.3s;
+            cursor: pointer;
+            text-align: center;
+            padding: 0.6rem;
+        }
+        .product-card:hover {
+            transform: translateY(-4px);
+            border-color: #ffd966;
+            background: rgba(25,25,45,0.8);
+        }
+        .product-card img {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 0.4rem;
+        }
+        .product-card .name {
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+        }
+        .product-card .price {
+            font-size: 0.65rem;
+            color: #ffd966;
+            margin-top: 0.2rem;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: rgba(255,255,255,0.12);
+            font-size: 0.6rem;
+            letter-spacing: 2px;
+            border-top: 1px solid rgba(255,215,0,0.08);
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 480px) {
+            .shop-header h1 { font-size: 1.3rem; letter-spacing: 5px; }
+            .menu { gap: 10px; padding: 4px 12px; }
+            .menu a { font-size: 8px; letter-spacing: 1px; }
+            .thumbnail { width: 45px; height: 45px; }
+            .product-title { font-size: 1.1rem; }
+            .product-price { font-size: 1.2rem; }
+            .products-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="custom-cursor" id="customCursor"><span>✦</span></div>
+<div class="dreamcore-ring"></div>
+
+<div class="menu">
+    <a href="index.html">Home</a>
+    <a href="shop-classic.html" style="color:#ffd966;">Shop</a>
+    <a href="pack.html">gallary</a>
+    <a href="static.html">Static</a>
+</div>
+
+<div class="shop-header">
+    <h1>✦ PIXEL DREAMCORE ✦</h1>
+    <p>classic collection • eternal pixels</p>
+</div>
+
+<div class="product-main" id="productMain">
+    <div class="product-gallery">
+        <img class="main-image" id="mainImage" src="" alt="main">
+        <div class="thumbnail-list" id="thumbnailList"></div>
+    </div>
+    <div class="product-info">
+        <div class="product-title" id="productTitle">GOLDEN ECHO</div>
+        <div class="product-price" id="productPrice">$0</div>
+        <div class="product-desc" id="productDesc">Description...</div>
+        <div class="about-product" id="aboutProduct"></div>
+        <div class="delivery-box" id="deliveryBox">
+            <span>✈ FREE DELIVERY</span> • 2-4 days
+        </div>
+        <div class="btn-group">
+            <a href="#" target="_blank" class="btn instagram-btn" id="instagramBtn">📷 INSTAGRAM</a>
+            <a href="#" target="_blank" class="btn whatsapp-btn" id="whatsappBtn">💬 WHATSAPP</a>
+        </div>
+    </div>
+</div>
+
+<div class="products-grid" id="productsGrid"></div>
+
+<div class="footer">
+    ✦ dreamcore pixel shop • free worldwide delivery • 24/7 support ✦
+</div>
+
+<script>
+    const products = [
+        { id: 1, name: "GOLDEN ECHO", price: 490, desc: "Limited edition golden pendant. Timeless elegance.", about: "18k gold plated • black onyx • handcrafted • includes gift box.", delivery: "✈ FREE DELIVERY • 2-3 DAYS", images: ["https://picsum.photos/id/104/400/400", "https://picsum.photos/id/104/300/300", "https://picsum.photos/id/104/200/200"], ig: "https://instagram.com/p/example1", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20GOLDEN%20ECHO" },
+        { id: 2, name: "MIDNIGHT NOIR", price: 299, desc: "Deep black fragrance, eternal charm. Luxury perfume.", about: "Oud & amber • 100ml • long lasting • luxury bottle.", delivery: "✈ FREE DELIVERY • 1-2 DAYS", images: ["https://picsum.photos/id/106/400/400", "https://picsum.photos/id/106/300/300", "https://picsum.photos/id/106/200/200"], ig: "https://instagram.com/p/example2", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20MIDNIGHT%20NOIR" },
+        { id: 3, name: "SILENT CROWN", price: 799, desc: "Sterling silver crown ring. Limited collection.", about: "925 silver • hand engraved • adjustable size • velvet pouch.", delivery: "✈ FREE DELIVERY • 3-5 DAYS", images: ["https://picsum.photos/id/15/400/400", "https://picsum.photos/id/15/300/300", "https://picsum.photos/id/15/200/200"], ig: "https://instagram.com/p/example3", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20SILENT%20CROWN" },
+        { id: 4, name: "ETERNAL STATIC", price: 1250, desc: "Swiss movement watch, black dial. Sapphire glass.", about: "Automatic movement • waterproof 50m • leather strap.", delivery: "✈ FREE DELIVERY • 2-4 DAYS", images: ["https://picsum.photos/id/22/400/400", "https://picsum.photos/id/22/300/300", "https://picsum.photos/id/22/200/200"], ig: "https://instagram.com/p/example4", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20ETERNAL%20STATIC" },
+        { id: 5, name: "VOID LEATHER", price: 890, desc: "Handcrafted leather bag, minimalist design.", about: "Italian leather • hand stitched • magnetic closure • dust bag.", delivery: "✈ FREE DELIVERY • 3-4 DAYS", images: ["https://picsum.photos/id/42/400/400", "https://picsum.photos/id/42/300/300", "https://picsum.photos/id/42/200/200"], ig: "https://instagram.com/p/example5", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20VOID%20LEATHER" },
+        { id: 6, name: "DREAMCORE RING", price: 399, desc: "Gold-plated, dreamcore symbol. Adjustable size.", about: "18k gold plated • dreamcore engraving • unisex design.", delivery: "✈ FREE DELIVERY • 2-3 DAYS", images: ["https://picsum.photos/id/88/400/400", "https://picsum.photos/id/88/300/300", "https://picsum.photos/id/88/200/200"], ig: "https://instagram.com/p/example6", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20DREAMCORE%20RING" },
+        { id: 7, name: "LUNAR ECHO", price: 2490, desc: "Moonphase complication watch. Limited edition.", about: "Automatic • moonphase display • sapphire crystal • steel case.", delivery: "✈ FREE DELIVERY • 4-6 DAYS", images: ["https://picsum.photos/id/169/400/400", "https://picsum.photos/id/169/300/300", "https://picsum.photos/id/169/200/200"], ig: "https://instagram.com/p/example7", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20LUNAR%20ECHO" },
+        { id: 8, name: "GHOST AMBER", price: 189, desc: "Amber and oud perfume. Long lasting scent.", about: "Natural amber • oriental oud • 50ml • spray bottle.", delivery: "✈ FREE DELIVERY • 1-2 DAYS", images: ["https://picsum.photos/id/26/400/400", "https://picsum.photos/id/26/300/300", "https://picsum.photos/id/26/200/200"], ig: "https://instagram.com/p/example8", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20GHOST%20AMBER" },
+        { id: 9, name: "ROYAL VELVET", price: 1590, desc: "Velvet blazer, midnight blue. Italian fabric.", about: "Pure velvet • tailored fit • satin lining • dry clean only.", delivery: "✈ FREE DELIVERY • 5-7 DAYS", images: ["https://picsum.photos/id/28/400/400", "https://picsum.photos/id/28/300/300", "https://picsum.photos/id/28/200/200"], ig: "https://instagram.com/p/example9", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20ROYAL%20VELVET" },
+        { id: 10, name: "IVORY DREAM", price: 450, desc: "Silk scarf, hand-painted. Unique piece.", about: "100% silk • hand-painted • 90x90cm • gift box.", delivery: "✈ FREE DELIVERY • 2-3 DAYS", images: ["https://picsum.photos/id/30/400/400", "https://picsum.photos/id/30/300/300", "https://picsum.photos/id/30/200/200"], ig: "https://instagram.com/p/example10", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20IVORY%20DREAM" },
+        { id: 11, name: "OBSIDIAN NIGHT", price: 320, desc: "Obsidian bracelet, protective energy.", about: "Natural obsidian • elastic string • unisex • healing stone.", delivery: "✈ FREE DELIVERY • 2-4 DAYS", images: ["https://picsum.photos/id/34/400/400", "https://picsum.photos/id/34/300/300", "https://picsum.photos/id/34/200/200"], ig: "https://instagram.com/p/example11", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20OBSIDIAN%20NIGHT" },
+        { id: 12, name: "GILDED AGE", price: 2100, desc: "Gold cufflinks, vintage design. 18k gold.", about: "18k solid gold • vintage engraving • luxury box.", delivery: "✈ FREE DELIVERY • 3-5 DAYS", images: ["https://picsum.photos/id/37/400/400", "https://picsum.photos/id/37/300/300", "https://picsum.photos/id/37/200/200"], ig: "https://instagram.com/p/example12", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20GILDED%20AGE" },
+        { id: 13, name: "STATIC DREAM", price: 540, desc: "Minimalist wallet, black leather. RFID protection.", about: "Genuine leather • RFID blocking • 6 card slots • compact.", delivery: "✈ FREE DELIVERY • 2-3 DAYS", images: ["https://picsum.photos/id/41/400/400", "https://picsum.photos/id/41/300/300", "https://picsum.photos/id/41/200/200"], ig: "https://instagram.com/p/example13", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20STATIC%20DREAM" },
+        { id: 14, name: "MOONLIGHT SONATA", price: 199, desc: "Silver necklace with moonstone. Elegant gift.", about: "925 silver • genuine moonstone • 18 inch chain.", delivery: "✈ FREE DELIVERY • 1-3 DAYS", images: ["https://picsum.photos/id/45/400/400", "https://picsum.photos/id/45/300/300", "https://picsum.photos/id/45/200/200"], ig: "https://instagram.com/p/example14", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20MOONLIGHT%20SONATA" },
+        { id: 15, name: "EMERALD VOID", price: 3500, desc: "Emerald ring, 14k gold. Natural gemstone.", about: "Natural emerald • 14k gold band • certificate included.", delivery: "✈ FREE DELIVERY • 5-8 DAYS", images: ["https://picsum.photos/id/47/400/400", "https://picsum.photos/id/47/300/300", "https://picsum.photos/id/47/200/200"], ig: "https://instagram.com/p/example15", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20EMERALD%20VOID" },
+        { id: 16, name: "CHAMPAGNE DREAM", price: 680, desc: "Champagne gold watch. Leather strap, quartz.", about: "Quartz movement • champagne dial • genuine leather strap.", delivery: "✈ FREE DELIVERY • 2-4 DAYS", images: ["https://picsum.photos/id/51/400/400", "https://picsum.photos/id/51/300/300", "https://picsum.photos/id/51/200/200"], ig: "https://instagram.com/p/example16", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20CHAMPAGNE%20DREAM" },
+        { id: 17, name: "NOIR ESSENCE", price: 275, desc: "Black & gold fountain pen. Smooth writing.", about: "Premium nib • metal body • ink converter • gift box.", delivery: "✈ FREE DELIVERY • 1-2 DAYS", images: ["https://picsum.photos/id/55/400/400", "https://picsum.photos/id/55/300/300", "https://picsum.photos/id/55/200/200"], ig: "https://instagram.com/p/example17", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20NOIR%20ESSENCE" },
+        { id: 18, name: "RUBY STATIC", price: 4200, desc: "Ruby pendant, platinum chain. High jewelry.", about: "Natural ruby • platinum chain • 0.5 carat • gift box.", delivery: "✈ FREE DELIVERY • 6-9 DAYS", images: ["https://picsum.photos/id/58/400/400", "https://picsum.photos/id/58/300/300", "https://picsum.photos/id/58/200/200"], ig: "https://instagram.com/p/example18", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20RUBY%20STATIC" },
+        { id: 19, name: "SILENT HOUR", price: 890, desc: "Desk clock, brass & glass. Mechanical movement.", about: "Mechanical movement • brass case • glass dome • vintage style.", delivery: "✈ FREE DELIVERY • 4-6 DAYS", images: ["https://picsum.photos/id/60/400/400", "https://picsum.photos/id/60/300/300", "https://picsum.photos/id/60/200/200"], ig: "https://instagram.com/p/example19", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20SILENT%20HOUR" },
+        { id: 20, name: "ETERNAL KNOT", price: 1290, desc: "Gold knot bracelet, infinity symbol. Unisex.", about: "14k gold • infinity knot • adjustable length • gift pouch.", delivery: "✈ FREE DELIVERY • 3-5 DAYS", images: ["https://picsum.photos/id/62/400/400", "https://picsum.photos/id/62/300/300", "https://picsum.photos/id/62/200/200"], ig: "https://instagram.com/p/example20", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20ETERNAL%20KNOT" }
+    ];
+
+    let currentProduct = products[0];
+
+    const mainImage = document.getElementById('mainImage');
+    const thumbnailList = document.getElementById('thumbnailList');
+    const productTitle = document.getElementById('productTitle');
+    const productPrice = document.getElementById('productPrice');
+    const productDesc = document.getElementById('productDesc');
+    const aboutProduct = document.getElementById('aboutProduct');
+    const deliveryBox = document.getElementById('deliveryBox');
+    const productsGrid = document.getElementById('productsGrid');
+    const instagramBtn = document.getElementById('instagramBtn');
+    const whatsappBtn = document.getElementById('whatsappBtn');
+
+    function updateMainProduct(product) {
+        currentProduct = product;
+        productTitle.innerText = product.name;
+        productPrice.innerText = `$${product.price}`;
+        productDesc.innerText = product.desc;
+        aboutProduct.innerText = `📦 ABOUT: ${product.about}`;
+        deliveryBox.innerHTML = `<span>${product.delivery}</span> • 24/7 support & tracking`;
+        mainImage.src = product.images[0];
+        instagramBtn.href = product.ig;
+        whatsappBtn.href = product.wa;
+        thumbnailList.innerHTML = '';
+        product.images.forEach(img => {
+            const thumb = document.createElement('img');
+            thumb.src = img;
+            thumb.classList.add('thumbnail');
+            thumb.addEventListener('click', () => { mainImage.src = img; });
+            thumbnailList.appendChild(thumb);
+        });
+    }
+
+    products.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `<img src="${product.images[0]}"><div class="name">${product.name}</div><div class="price">$${product.price}</div>`;
+        card.addEventListener('click', () => updateMainProduct(product));
+        productsGrid.appendChild(card);
+    });
+
+    updateMainProduct(products[0]);
+
+    const cursor = document.getElementById('customCursor');
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+    });
+</script>
+</body>
+</html>

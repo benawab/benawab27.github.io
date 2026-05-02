@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>LUSICDUS — LUXURY GALLERY</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0f;
+            font-family: 'Times New Roman', 'Garamond', serif;
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+
+        /* noise overlay */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="4"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.04"/></svg>');
+            background-repeat: repeat;
+            pointer-events: none;
+            opacity: 0.35;
+        }
+
+        /* custom cursor */
+        .custom-cursor {
+            position: fixed;
+            width: 28px;
+            height: 28px;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+        }
+        .custom-cursor span {
+            font-size: 20px;
+            color: rgba(255,215,0,0.7);
+            text-shadow: 0 0 8px gold;
+            animation: cursorPulse 2s ease-in-out infinite;
+            display: inline-block;
+        }
+        @keyframes cursorPulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); text-shadow: 0 0 12px gold; }
+        }
+
+        /* menu */
+        .menu {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 30px;
+            background: rgba(10,10,15,0.7);
+            backdrop-filter: blur(12px);
+            padding: 10px 28px;
+            border-radius: 60px;
+            z-index: 100;
+            border: 1px solid rgba(255,215,0,0.3);
+        }
+        .menu a {
+            color: #b0b0b0;
+            text-decoration: none;
+            font-size: 13px;
+            letter-spacing: 2.5px;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+        .menu a:hover {
+            color: #ffd966;
+            letter-spacing: 4px;
+            text-shadow: 0 0 5px gold;
+        }
+
+        /* dreamcore ring */
+        .dreamcore-ring {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,215,0,0.5);
+            animation: ringPulse 4s ease-in-out infinite;
+            z-index: 50;
+            pointer-events: none;
+        }
+        .dreamcore-ring::after {
+            content: "✦";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffd966;
+            font-size: 18px;
+            animation: starGlow 2s infinite;
+        }
+        @keyframes ringPulse {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+        @keyframes starGlow {
+            0%, 100% { opacity: 0.5; text-shadow: 0 0 2px gold; }
+            50% { opacity: 1; text-shadow: 0 0 10px gold; }
+        }
+
+        /* header */
+        .gallery-header {
+            text-align: center;
+            padding: 7rem 2rem 2rem;
+        }
+        .gallery-header h1 {
+            font-size: 3rem;
+            letter-spacing: 12px;
+            font-weight: 300;
+            background: linear-gradient(135deg, #fff, #ffd966, #b8860b);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .gallery-header p {
+            letter-spacing: 5px;
+            color: rgba(255,215,0,0.5);
+            font-style: italic;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        /* video grid - responsive for mobile */
+        .video-grid {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 1rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .video-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 1rem;
+            }
+        }
+
+        .video-card {
+            background: rgba(15,15,25,0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255,215,0,0.2);
+            transition: all 0.4s;
+            cursor: pointer;
+        }
+        .video-card:hover {
+            transform: translateY(-5px);
+            border-color: #ffd966;
+            box-shadow: 0 0 20px rgba(255,215,0,0.2);
+        }
+        .video-thumb {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            display: block;
+            transition: 0.3s;
+        }
+        .video-card:hover .video-thumb {
+            filter: brightness(1.1) contrast(1.05);
+        }
+        .video-info {
+            padding: 0.6rem;
+            text-align: center;
+        }
+        .video-title {
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            color: #ffd966;
+        }
+        .video-desc {
+            font-size: 0.6rem;
+            color: rgba(255,255,255,0.5);
+            margin-top: 0.2rem;
+            letter-spacing: 1px;
+        }
+
+        /* modal for video */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.active {
+            display: flex;
+            animation: fadeModal 0.3s ease;
+        }
+        @keyframes fadeModal {
+            from { opacity: 0; backdrop-filter: blur(0); }
+            to { opacity: 1; backdrop-filter: blur(20px); }
+        }
+        .modal-content {
+            max-width: 90%;
+            width: 90%;
+            background: rgba(10,10,20,0.95);
+            border: 1px solid rgba(255,215,0,0.4);
+            border-radius: 24px;
+            padding: 0.8rem;
+            text-align: center;
+        }
+        .modal-video {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 16px;
+            background: #000;
+        }
+        .modal-title {
+            font-size: 1rem;
+            letter-spacing: 3px;
+            color: #ffd966;
+            margin: 0.6rem 0 0.2rem;
+        }
+        .modal-desc {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 0.6rem;
+        }
+        .modal-close {
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            color: rgba(255,215,0,0.5);
+            cursor: pointer;
+            margin-top: 0.5rem;
+        }
+
+        /* footer */
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 2rem;
+            border-top: 1px solid rgba(255,215,0,0.1);
+            margin-top: 3rem;
+        }
+        .footer-left a, .footer-right a {
+            font-size: 1.3rem;
+            text-decoration: none;
+            transition: 0.3s;
+            color: #ffd966;
+        }
+        .footer-left a:hover, .footer-right a:hover {
+            color: #fff;
+            text-shadow: 0 0 8px gold;
+        }
+        .footer-center {
+            font-size: 0.55rem;
+            letter-spacing: 2px;
+            color: rgba(255,215,0,0.3);
+        }
+
+        @media (max-width: 768px) {
+            .gallery-header h1 { font-size: 1.6rem; letter-spacing: 6px; }
+            .menu { gap: 12px; padding: 6px 16px; top: 10px; }
+            .menu a { font-size: 9px; letter-spacing: 1px; }
+            .footer { padding: 0.8rem 1rem; }
+            .footer-left a, .footer-right a { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="custom-cursor" id="customCursor"><span>✦</span></div>
+<div class="dreamcore-ring"></div>
+
+<div class="menu">
+    <a href="index.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="pack.html" style="color:#ffd966;">Gallery</a>
+    <a href="static.html">Static</a>
+</div>
+
+<div class="gallery-header">
+    <h1>✦ CINEMATIC GALLERY ✦</h1>
+    <p>moving dreams • eternal frames</p>
+</div>
+
+<div class="video-grid" id="videoGrid"></div>
+
+<div class="footer">
+    <div class="footer-left">
+        <a href="#" id="igLink">🪐</a>
+    </div>
+    <div class="footer-center">
+        ✦ every frame a ghost ✦
+    </div>
+    <div class="footer-right">
+        <a href="#" id="waLink">🌌</a>
+    </div>
+</div>
+
+<div class="modal" id="videoModal">
+    <div class="modal-content">
+        <video class="modal-video" id="modalVideo" controls autoplay loop></video>
+        <div class="modal-title" id="modalTitle"></div>
+        <div class="modal-desc" id="modalDesc"></div>
+        <div class="modal-close" id="closeModalBtn">✦ CLOSE ✦</div>
+    </div>
+</div>
+
+<script>
+    // SOCIAL LINKS
+    document.getElementById('igLink').href = 'https://instagram.com/prctmll';
+    document.getElementById('waLink').href = 'https://wa.me/989123456789';
+
+    // 15 VIDEO DATA (replace with your own)
+    const videos = [
+        { src: "https://assets.mixkit.co/videos/preview/mixkit-golden-sunset-clouds-3373-large.mp4", thumb: "https://picsum.photos/id/104/400/250", title: "GOLDEN STATIC", desc: "Cinematic drift through golden frequencies." },
+        { src: "https://assets.mixkit.co/videos/preview/mixkit-waves-in-the-water-1164-large.mp4", thumb: "https://picsum.photos/id/106/400/250", title: "OCEAN OF NOISE", desc: "Where sound becomes texture." },
+        { src: "https://assets.mixkit.co/videos/preview/mixkit-night-city-drive-2090-large.mp4", thumb: "https://picsum.photos/id/15/400/250", title: "CITY STATIC", desc: "Neon dreams and electric silence." },
+        { src: "https://assets.mixkit.co/videos/preview/mixkit-forest-stream-3287-large.mp4", thumb: "https://picsum.photos/id/22/400/250", title: "FOREST FREQUENCY", desc: "Nature's static. Raw and ethereal." },
+        { src: "https://assets.mixkit.co/videos/preview/mixkit-starry-night-sky-1262-large.mp4", thumb: "https://picsum.photos/id/42/400/250", title: "VOID SKY", desc: "Stars that hum in the dark." },
+        { src: "https://assets.mixkit.co/videos/preview/mixkit-clouds-over-the-city-3080-large.mp4", thumb: "https://picsum.photos/id/88/400/250", title: "DRIFTING DREAM", desc: "Between sleep and static." },
+        { src: "https://assets.mixkit.co/videos/preview/mixkit-cinematic-ocean-sunset-844-large.mp4", thumb: "https://picsum.photos/id/169/400/250", title: "SUNSET STATIC", desc: "Golden hour frequencies." },
+        { src: "https://assets.mixkit.co/videos/preview/mixkit-street-night-rain-1149-large.mp4", thumb: "https://picsum.photos/id/26/400/250", title: "RAIN NOISE", desc: "Urban static and wet echoes." },
+        { src: "https://assets.mixkit.co/videos/preview/mixkit-moon-and-clouds-4158-large.mp4", thumb: "https://picsum.photos/id/34/400/250", title: "LUNAR STATIC", desc: "Moonlit frequencies." },
+        { src: "https://assets.mixkit.co/videos/preview/mixkit-tree-leaves-wind-975-large.mp4", thumb: "https://picsum.photos/id/41/400/250", title: "WIND ECHO", desc: "Leaves and static dreams." },
+        { src: "https://assets.mixkit.co/videos/preview/mixkit-calm-mountains-4109-large.mp4", thumb: "https://picsum.photos/id/45/400/250", title: "MOUNTAIN VOID", desc: "Deep nature silence." },
+        { src: "https://assets.mixkit.co/videos/preview/mixkit-foggy-forest-3103-large.mp4", thumb: "https://picsum.photos/id/47/400/250", title: "FOG STATIC", desc: "Mysterious ambient textures." },
+        { src: "https://assets.mixkit.co/videos/preview/mixkit-river-flow-3288-large.mp4", thumb: "https://picsum.photos/id/51/400/250", title: "FLOW NOISE", desc: "Water and white noise." },
+        { src: "https://assets.mixkit.co/videos/preview/mixkit-dark-clouds-motion-1224-large.mp4", thumb: "https://picsum.photos/id/58/400/250", title: "DARK STATIC", desc: "Storm frequencies." },
+        { src: "https://assets.mixkit.co/videos/preview/mixkit-snowy-forest-3358-large.mp4", thumb: "https://picsum.photos/id/60/400/250", title: "SNOW ECHO", desc: "Frozen static whispers." }
+    ];
+
+    const videoGrid = document.getElementById('videoGrid');
+    const modal = document.getElementById('videoModal');
+    const modalVideo = document.getElementById('modalVideo');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDesc = document.getElementById('modalDesc');
+    const closeBtn = document.getElementById('closeModalBtn');
+
+    videos.forEach(video => {
+        const card = document.createElement('div');
+        card.className = 'video-card';
+        card.innerHTML = `
+            <img class="video-thumb" src="${video.thumb}" alt="${video.title}">
+            <div class="video-info">
+                <div class="video-title">${video.title}</div>
+                <div class="video-desc">${video.desc}</div>
+            </div>
+        `;
+        card.addEventListener('click', () => {
+            modalVideo.src = video.src;
+            modalTitle.innerText = video.title;
+            modalDesc.innerText = video.desc;
+            modal.classList.add('active');
+            modalVideo.play();
+        });
+        videoGrid.appendChild(card);
+    });
+
+    closeBtn.addEventListener('click', () => {
+        modal.classList.remove('active');
+        modalVideo.pause();
+        modalVideo.src = '';
+    });
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('active');
+            modalVideo.pause();
+            modalVideo.src = '';
+        }
+    });
+
+    // custom cursor
+    const cursor = document.getElementById('customCursor');
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+    });
+</script>
+</body>
+</html>
