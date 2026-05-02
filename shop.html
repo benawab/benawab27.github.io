@@ -32,25 +32,50 @@
             opacity: 0.4;
         }
 
-        /* custom pixel cursor */
+        /* custom gold cursor + kite */
         .custom-cursor {
             position: fixed;
-            width: 24px;
-            height: 24px;
+            width: 28px;
+            height: 28px;
             pointer-events: none;
             z-index: 9999;
             transform: translate(-50%, -50%);
+            transition: transform 0.08s linear;
+            will-change: left, top;
         }
         .custom-cursor span {
-            font-size: 18px;
+            font-size: 22px;
             color: #ffd966;
-            text-shadow: 0 0 4px gold;
-            animation: cursorPulse 2s ease-in-out infinite;
+            text-shadow: 0 0 8px gold, 0 0 12px rgba(255,215,0,0.5);
+            animation: starGlow 2s ease-in-out infinite;
             display: inline-block;
         }
-        @keyframes cursorPulse {
-            0%, 100% { opacity: 0.6; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); }
+        @keyframes starGlow {
+            0%, 100% { opacity: 0.7; transform: scale(1); text-shadow: 0 0 4px gold; }
+            50% { opacity: 1; transform: scale(1.2); text-shadow: 0 0 16px gold; }
+        }
+
+        .gold-kite {
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            font-size: 22px;
+            white-space: nowrap;
+            color: #ffd966;
+            text-shadow: 0 0 8px gold;
+            filter: drop-shadow(0 0 6px gold);
+            animation: kiteFly 1.5s ease-out forwards;
+        }
+        @keyframes kiteFly {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tx, 120px), var(--ty, -180px)) rotate(540deg);
+                filter: blur(2px);
+            }
         }
 
         /* menu */
@@ -79,7 +104,7 @@
         }
         .menu a:hover {
             color: #ffd966;
-            letter-spacing: 3px;
+            letter-spacing: 12px;
         }
 
         /* dreamcore pixel ring */
@@ -103,13 +128,13 @@
             transform: translate(-50%, -50%);
             color: #ffd966;
             font-size: 16px;
-            animation: starGlow 2s infinite;
+            animation: starGlowRing 2s infinite;
         }
         @keyframes ringPulse {
             0%, 100% { opacity: 0.4; transform: scale(1); }
             50% { opacity: 1; transform: scale(1.05); }
         }
-        @keyframes starGlow {
+        @keyframes starGlowRing {
             0%, 100% { opacity: 0.5; text-shadow: 0 0 2px gold; }
             50% { opacity: 1; text-shadow: 0 0 10px gold; }
         }
@@ -134,7 +159,7 @@
             font-size: 0.7rem;
         }
 
-        /* main product (responsive) */
+        /* main product */
         .product-main {
             max-width: 1000px;
             margin: 1rem auto;
@@ -269,7 +294,6 @@
             color: #fff;
         }
 
-        /* products grid (responsive) */
         .products-grid {
             max-width: 1000px;
             margin: 1.5rem auto;
@@ -334,12 +358,14 @@
 </head>
 <body>
 
+<!-- custom cursor + kite -->
 <div class="custom-cursor" id="customCursor"><span>✦</span></div>
+
 <div class="dreamcore-ring"></div>
 
 <div class="menu">
     <a href="index.html">Home</a>
-    <a href="shop-classic.html" style="color:#ffd966;">Shop</a>
+    <a href="shop.html" style="color:#ffd966;">Shop</a>
     <a href="pack.html">gallary</a>
     <a href="static.html">Static</a>
 </div>
@@ -375,27 +401,32 @@
     ✦ dreamcore pixel shop • free worldwide delivery • 24/7 support ✦
 </div>
 
+<audio id="bgMusic" loop style="display:none;">
+    <source src="shop.mp3" type="audio/mpeg">
+</audio>
+
 <script>
+    // ========== PRODUCTS DATA ==========
     const products = [
-        { id: 1, name: "GOLDEN ECHO", price: 490, desc: "Limited edition golden pendant. Timeless elegance.", about: "18k gold plated • black onyx • handcrafted • includes gift box.", delivery: "✈ FREE DELIVERY • 2-3 DAYS", images: ["https://picsum.photos/id/104/400/400", "https://picsum.photos/id/104/300/300", "https://picsum.photos/id/104/200/200"], ig: "https://instagram.com/p/example1", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20GOLDEN%20ECHO" },
-        { id: 2, name: "MIDNIGHT NOIR", price: 299, desc: "Deep black fragrance, eternal charm. Luxury perfume.", about: "Oud & amber • 100ml • long lasting • luxury bottle.", delivery: "✈ FREE DELIVERY • 1-2 DAYS", images: ["https://picsum.photos/id/106/400/400", "https://picsum.photos/id/106/300/300", "https://picsum.photos/id/106/200/200"], ig: "https://instagram.com/p/example2", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20MIDNIGHT%20NOIR" },
-        { id: 3, name: "SILENT CROWN", price: 799, desc: "Sterling silver crown ring. Limited collection.", about: "925 silver • hand engraved • adjustable size • velvet pouch.", delivery: "✈ FREE DELIVERY • 3-5 DAYS", images: ["https://picsum.photos/id/15/400/400", "https://picsum.photos/id/15/300/300", "https://picsum.photos/id/15/200/200"], ig: "https://instagram.com/p/example3", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20SILENT%20CROWN" },
-        { id: 4, name: "ETERNAL STATIC", price: 1250, desc: "Swiss movement watch, black dial. Sapphire glass.", about: "Automatic movement • waterproof 50m • leather strap.", delivery: "✈ FREE DELIVERY • 2-4 DAYS", images: ["https://picsum.photos/id/22/400/400", "https://picsum.photos/id/22/300/300", "https://picsum.photos/id/22/200/200"], ig: "https://instagram.com/p/example4", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20ETERNAL%20STATIC" },
-        { id: 5, name: "VOID LEATHER", price: 890, desc: "Handcrafted leather bag, minimalist design.", about: "Italian leather • hand stitched • magnetic closure • dust bag.", delivery: "✈ FREE DELIVERY • 3-4 DAYS", images: ["https://picsum.photos/id/42/400/400", "https://picsum.photos/id/42/300/300", "https://picsum.photos/id/42/200/200"], ig: "https://instagram.com/p/example5", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20VOID%20LEATHER" },
-        { id: 6, name: "DREAMCORE RING", price: 399, desc: "Gold-plated, dreamcore symbol. Adjustable size.", about: "18k gold plated • dreamcore engraving • unisex design.", delivery: "✈ FREE DELIVERY • 2-3 DAYS", images: ["https://picsum.photos/id/88/400/400", "https://picsum.photos/id/88/300/300", "https://picsum.photos/id/88/200/200"], ig: "https://instagram.com/p/example6", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20DREAMCORE%20RING" },
-        { id: 7, name: "LUNAR ECHO", price: 2490, desc: "Moonphase complication watch. Limited edition.", about: "Automatic • moonphase display • sapphire crystal • steel case.", delivery: "✈ FREE DELIVERY • 4-6 DAYS", images: ["https://picsum.photos/id/169/400/400", "https://picsum.photos/id/169/300/300", "https://picsum.photos/id/169/200/200"], ig: "https://instagram.com/p/example7", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20LUNAR%20ECHO" },
-        { id: 8, name: "GHOST AMBER", price: 189, desc: "Amber and oud perfume. Long lasting scent.", about: "Natural amber • oriental oud • 50ml • spray bottle.", delivery: "✈ FREE DELIVERY • 1-2 DAYS", images: ["https://picsum.photos/id/26/400/400", "https://picsum.photos/id/26/300/300", "https://picsum.photos/id/26/200/200"], ig: "https://instagram.com/p/example8", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20GHOST%20AMBER" },
-        { id: 9, name: "ROYAL VELVET", price: 1590, desc: "Velvet blazer, midnight blue. Italian fabric.", about: "Pure velvet • tailored fit • satin lining • dry clean only.", delivery: "✈ FREE DELIVERY • 5-7 DAYS", images: ["https://picsum.photos/id/28/400/400", "https://picsum.photos/id/28/300/300", "https://picsum.photos/id/28/200/200"], ig: "https://instagram.com/p/example9", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20ROYAL%20VELVET" },
-        { id: 10, name: "IVORY DREAM", price: 450, desc: "Silk scarf, hand-painted. Unique piece.", about: "100% silk • hand-painted • 90x90cm • gift box.", delivery: "✈ FREE DELIVERY • 2-3 DAYS", images: ["https://picsum.photos/id/30/400/400", "https://picsum.photos/id/30/300/300", "https://picsum.photos/id/30/200/200"], ig: "https://instagram.com/p/example10", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20IVORY%20DREAM" },
-        { id: 11, name: "OBSIDIAN NIGHT", price: 320, desc: "Obsidian bracelet, protective energy.", about: "Natural obsidian • elastic string • unisex • healing stone.", delivery: "✈ FREE DELIVERY • 2-4 DAYS", images: ["https://picsum.photos/id/34/400/400", "https://picsum.photos/id/34/300/300", "https://picsum.photos/id/34/200/200"], ig: "https://instagram.com/p/example11", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20OBSIDIAN%20NIGHT" },
-        { id: 12, name: "GILDED AGE", price: 2100, desc: "Gold cufflinks, vintage design. 18k gold.", about: "18k solid gold • vintage engraving • luxury box.", delivery: "✈ FREE DELIVERY • 3-5 DAYS", images: ["https://picsum.photos/id/37/400/400", "https://picsum.photos/id/37/300/300", "https://picsum.photos/id/37/200/200"], ig: "https://instagram.com/p/example12", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20GILDED%20AGE" },
-        { id: 13, name: "STATIC DREAM", price: 540, desc: "Minimalist wallet, black leather. RFID protection.", about: "Genuine leather • RFID blocking • 6 card slots • compact.", delivery: "✈ FREE DELIVERY • 2-3 DAYS", images: ["https://picsum.photos/id/41/400/400", "https://picsum.photos/id/41/300/300", "https://picsum.photos/id/41/200/200"], ig: "https://instagram.com/p/example13", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20STATIC%20DREAM" },
-        { id: 14, name: "MOONLIGHT SONATA", price: 199, desc: "Silver necklace with moonstone. Elegant gift.", about: "925 silver • genuine moonstone • 18 inch chain.", delivery: "✈ FREE DELIVERY • 1-3 DAYS", images: ["https://picsum.photos/id/45/400/400", "https://picsum.photos/id/45/300/300", "https://picsum.photos/id/45/200/200"], ig: "https://instagram.com/p/example14", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20MOONLIGHT%20SONATA" },
-        { id: 15, name: "EMERALD VOID", price: 3500, desc: "Emerald ring, 14k gold. Natural gemstone.", about: "Natural emerald • 14k gold band • certificate included.", delivery: "✈ FREE DELIVERY • 5-8 DAYS", images: ["https://picsum.photos/id/47/400/400", "https://picsum.photos/id/47/300/300", "https://picsum.photos/id/47/200/200"], ig: "https://instagram.com/p/example15", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20EMERALD%20VOID" },
-        { id: 16, name: "CHAMPAGNE DREAM", price: 680, desc: "Champagne gold watch. Leather strap, quartz.", about: "Quartz movement • champagne dial • genuine leather strap.", delivery: "✈ FREE DELIVERY • 2-4 DAYS", images: ["https://picsum.photos/id/51/400/400", "https://picsum.photos/id/51/300/300", "https://picsum.photos/id/51/200/200"], ig: "https://instagram.com/p/example16", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20CHAMPAGNE%20DREAM" },
-        { id: 17, name: "NOIR ESSENCE", price: 275, desc: "Black & gold fountain pen. Smooth writing.", about: "Premium nib • metal body • ink converter • gift box.", delivery: "✈ FREE DELIVERY • 1-2 DAYS", images: ["https://picsum.photos/id/55/400/400", "https://picsum.photos/id/55/300/300", "https://picsum.photos/id/55/200/200"], ig: "https://instagram.com/p/example17", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20NOIR%20ESSENCE" },
-        { id: 18, name: "RUBY STATIC", price: 4200, desc: "Ruby pendant, platinum chain. High jewelry.", about: "Natural ruby • platinum chain • 0.5 carat • gift box.", delivery: "✈ FREE DELIVERY • 6-9 DAYS", images: ["https://picsum.photos/id/58/400/400", "https://picsum.photos/id/58/300/300", "https://picsum.photos/id/58/200/200"], ig: "https://instagram.com/p/example18", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20RUBY%20STATIC" },
-        { id: 19, name: "SILENT HOUR", price: 890, desc: "Desk clock, brass & glass. Mechanical movement.", about: "Mechanical movement • brass case • glass dome • vintage style.", delivery: "✈ FREE DELIVERY • 4-6 DAYS", images: ["https://picsum.photos/id/60/400/400", "https://picsum.photos/id/60/300/300", "https://picsum.photos/id/60/200/200"], ig: "https://instagram.com/p/example19", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20SILENT%20HOUR" },
+        { id: 1, name: "GOLDEN ECHO", price: 490, desc: "Limited edition golden pendant. Timeless elegance.", about: "18k gold plated • black onyx • handcrafted • includes gift box.", delivery: "✈ FREE DELIVERY • 2-3 DAYS", images: ["https://picsum.photos/id/104/400/400", "https://picsum.photos/id/104/300/300", "https://picsum.photos/id/104/200/200"], ig: "https://instagram.com/prctmll", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20GOLDEN%20ECHO" },
+        { id: 2, name: "MIDNIGHT NOIR", price: 299, desc: "Deep black fragrance, eternal charm. Luxury perfume.", about: "Oud & amber • 100ml • long lasting • luxury bottle.", delivery: "✈ FREE DELIVERY • 1-2 DAYS", images: ["https://picsum.photos/id/106/400/400", "https://picsum.photos/id/106/300/300", "https://picsum.photos/id/106/200/200"], ig: "https://instagram.com/prctmll", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20MIDNIGHT%20NOIR" },
+        { id: 3, name: "SILENT CROWN", price: 799, desc: "Sterling silver crown ring. Limited collection.", about: "925 silver • hand engraved • adjustable size • velvet pouch.", delivery: "✈ FREE DELIVERY • 3-5 DAYS", images: ["https://picsum.photos/id/15/400/400", "https://picsum.photos/id/15/300/300", "https://picsum.photos/id/15/200/200"], ig: "https://instagram.com/prctmll", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20SILENT%20CROWN" },
+        { id: 4, name: "ETERNAL STATIC", price: 1250, desc: "Swiss movement watch, black dial. Sapphire glass.", about: "Automatic movement • waterproof 50m • leather strap.", delivery: "✈ FREE DELIVERY • 2-4 DAYS", images: ["https://picsum.photos/id/22/400/400", "https://picsum.photos/id/22/300/300", "https://picsum.photos/id/22/200/200"], ig: "https://instagram.com/prctmll", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20ETERNAL%20STATIC" },
+        { id: 5, name: "VOID LEATHER", price: 890, desc: "Handcrafted leather bag, minimalist design.", about: "Italian leather • hand stitched • magnetic closure • dust bag.", delivery: "✈ FREE DELIVERY • 3-4 DAYS", images: ["https://picsum.photos/id/42/400/400", "https://picsum.photos/id/42/300/300", "https://picsum.photos/id/42/200/200"], ig: "https://instagram.com/prctmll", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20VOID%20LEATHER" },
+        { id: 6, name: "DREAMCORE RING", price: 399, desc: "Gold-plated, dreamcore symbol. Adjustable size.", about: "18k gold plated • dreamcore engraving • unisex design.", delivery: "✈ FREE DELIVERY • 2-3 DAYS", images: ["https://picsum.photos/id/88/400/400", "https://picsum.photos/id/88/300/300", "https://picsum.photos/id/88/200/200"], ig: "https://instagram.com/prctmll", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20DREAMCORE%20RING" },
+        { id: 7, name: "LUNAR ECHO", price: 2490, desc: "Moonphase complication watch. Limited edition.", about: "Automatic • moonphase display • sapphire crystal • steel case.", delivery: "✈ FREE DELIVERY • 4-6 DAYS", images: ["https://picsum.photos/id/169/400/400", "https://picsum.photos/id/169/300/300", "https://picsum.photos/id/169/200/200"], ig: "https://instagram.com/prctmll", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20LUNAR%20ECHO" },
+        { id: 8, name: "GHOST AMBER", price: 189, desc: "Amber and oud perfume. Long lasting scent.", about: "Natural amber • oriental oud • 50ml • spray bottle.", delivery: "✈ FREE DELIVERY • 1-2 DAYS", images: ["https://picsum.photos/id/26/400/400", "https://picsum.photos/id/26/300/300", "https://picsum.photos/id/26/200/200"], ig: "https://instagram.com/prctmll", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20GHOST%20AMBER" },
+        { id: 9, name: "ROYAL VELVET", price: 1590, desc: "Velvet blazer, midnight blue. Italian fabric.", about: "Pure velvet • tailored fit • satin lining • dry clean only.", delivery: "✈ FREE DELIVERY • 5-7 DAYS", images: ["https://picsum.photos/id/28/400/400", "https://picsum.photos/id/28/300/300", "https://picsum.photos/id/28/200/200"], ig: "https://instagram.com/prctmll", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20ROYAL%20VELVET" },
+        { id: 10, name: "IVORY DREAM", price: 450, desc: "Silk scarf, hand-painted. Unique piece.", about: "100% silk • hand-painted • 90x90cm • gift box.", delivery: "✈ FREE DELIVERY • 2-3 DAYS", images: ["https://picsum.photos/id/30/400/400", "https://picsum.photos/id/30/300/300", "https://picsum.photos/id/30/200/200"], ig: "https://instagram.com/prctmll", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20IVORY%20DREAM" },
+        { id: 11, name: "OBSIDIAN NIGHT", price: 320, desc: "Obsidian bracelet, protective energy.", about: "Natural obsidian • elastic string • unisex • healing stone.", delivery: "✈ FREE DELIVERY • 2-4 DAYS", images: ["https://picsum.photos/id/34/400/400", "https://picsum.photos/id/34/300/300", "https://picsum.photos/id/34/200/200"], ig: "https://instagram.com/prctmll", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20OBSIDIAN%20NIGHT" },
+        { id: 12, name: "GILDED AGE", price: 2100, desc: "Gold cufflinks, vintage design. 18k gold.", about: "18k solid gold • vintage engraving • luxury box.", delivery: "✈ FREE DELIVERY • 3-5 DAYS", images: ["https://picsum.photos/id/37/400/400", "https://picsum.photos/id/37/300/300", "https://picsum.photos/id/37/200/200"], ig: "https://instagram.com/prctmll", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20GILDED%20AGE" },
+        { id: 13, name: "STATIC DREAM", price: 540, desc: "Minimalist wallet, black leather. RFID protection.", about: "Genuine leather • RFID blocking • 6 card slots • compact.", delivery: "✈ FREE DELIVERY • 2-3 DAYS", images: ["https://picsum.photos/id/41/400/400", "https://picsum.photos/id/41/300/300", "https://picsum.photos/id/41/200/200"], ig: "https://instagram.com/prctmll", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20STATIC%20DREAM" },
+        { id: 14, name: "MOONLIGHT SONATA", price: 199, desc: "Silver necklace with moonstone. Elegant gift.", about: "925 silver • genuine moonstone • 18 inch chain.", delivery: "✈ FREE DELIVERY • 1-3 DAYS", images: ["https://picsum.photos/id/45/400/400", "https://picsum.photos/id/45/300/300", "https://picsum.photos/id/45/200/200"], ig: "https://instagram.com/prctmll", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20MOONLIGHT%20SONATA" },
+        { id: 15, name: "EMERALD VOID", price: 3500, desc: "Emerald ring, 14k gold. Natural gemstone.", about: "Natural emerald • 14k gold band • certificate included.", delivery: "✈ FREE DELIVERY • 5-8 DAYS", images: ["https://picsum.photos/id/47/400/400", "https://picsum.photos/id/47/300/300", "https://picsum.photos/id/47/200/200"], ig: "https://instagram.com/prctmll", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20EMERALD%20VOID" },
+        { id: 16, name: "CHAMPAGNE DREAM", price: 680, desc: "Champagne gold watch. Leather strap, quartz.", about: "Quartz movement • champagne dial • genuine leather strap.", delivery: "✈ FREE DELIVERY • 2-4 DAYS", images: ["https://picsum.photos/id/51/400/400", "https://picsum.photos/id/51/300/300", "https://picsum.photos/id/51/200/200"], ig: "https://instagram.com/prctmll", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20CHAMPAGNE%20DREAM" },
+        { id: 17, name: "NOIR ESSENCE", price: 275, desc: "Black & gold fountain pen. Smooth writing.", about: "Premium nib • metal body • ink converter • gift box.", delivery: "✈ FREE DELIVERY • 1-2 DAYS", images: ["https://picsum.photos/id/55/400/400", "https://picsum.photos/id/55/300/300", "https://picsum.photos/id/55/200/200"], ig: "https://instagram.com/prctmll", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20NOIR%20ESSENCE" },
+        { id: 18, name: "RUBY STATIC", price: 4200, desc: "Ruby pendant, platinum chain. High jewelry.", about: "Natural ruby • platinum chain • 0.5 carat • gift box.", delivery: "✈ FREE DELIVERY • 6-9 DAYS", images: ["https://picsum.photos/id/58/400/400", "https://picsum.photos/id/58/300/300", "https://picsum.photos/id/58/200/200"], ig: "https://instagram.com/prctmll", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20RUBY%20STATIC" },
+        { id: 19, name: "SILENT HOUR", price: 890, desc: "Desk clock, brass & glass. Mechanical movement.", about: "Mechanical movement • brass case • glass dome • vintage style.", delivery: "✈ FREE DELIVERY • 4-6 DAYS", images: ["https://picsum.photos/id/60/400/400", "https://picsum.photos/id/60/300/300", "https://picsum.photos/id/60/200/200"], ig: "https://instagram.com/prctmll", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20SILENT%20HOUR" },
         { id: 20, name: "ETERNAL KNOT", price: 1290, desc: "Gold knot bracelet, infinity symbol. Unisex.", about: "14k gold • infinity knot • adjustable length • gift pouch.", delivery: "✈ FREE DELIVERY • 3-5 DAYS", images: ["https://picsum.photos/id/62/400/400", "https://picsum.photos/id/62/300/300", "https://picsum.photos/id/62/200/200"], ig: "https://instagram.com/p/example20", wa: "https://wa.me/989123456789?text=Hi%2C%20I'm%20interested%20in%20ETERNAL%20KNOT" }
     ];
 
@@ -442,11 +473,58 @@
 
     updateMainProduct(products[0]);
 
+    // ========== CUSTOM CURSOR (SMOOTH + GOLD KITE ON CLICK) ==========
     const cursor = document.getElementById('customCursor');
+    let mouseX = 0, mouseY = 0;
+    let cursorX = 0, cursorY = 0;
+
     document.addEventListener('mousemove', (e) => {
-        cursor.style.left = e.clientX + 'px';
-        cursor.style.top = e.clientY + 'px';
+        mouseX = e.clientX;
+        mouseY = e.clientY;
     });
+
+    function smoothMove() {
+        cursorX += (mouseX - cursorX) * 0.2;
+        cursorY += (mouseY - cursorY) * 0.2;
+        cursor.style.left = cursorX + 'px';
+        cursor.style.top = cursorY + 'px';
+        requestAnimationFrame(smoothMove);
+    }
+    smoothMove();
+
+    document.addEventListener('click', (e) => {
+        const star = document.createElement('div');
+        star.className = 'gold-kite';
+        star.innerText = '✴';
+        star.style.left = e.clientX + 'px';
+        star.style.top = e.clientY + 'px';
+        star.style.position = 'fixed';
+
+        const randomX = (Math.random() - 0.5) * 280;
+        const randomY = -120 - Math.random() * 150;
+        star.style.setProperty('--tx', randomX + 'px');
+        star.style.setProperty('--ty', randomY + 'px');
+
+        document.body.appendChild(star);
+
+        setTimeout(() => {
+            star.remove();
+        }, 1500);
+    });
+
+    // ========== BACKGROUND MUSIC ==========
+    (function() {
+        let audio = document.getElementById('bgMusic');
+        if(audio) {
+            audio.volume = 0.3;
+            audio.play().catch(() => {
+                document.body.addEventListener('click', function playOnce() {
+                    audio.play();
+                    document.body.removeEventListener('click', playOnce);
+                }, { once: true });
+            });
+        }
+    })();
 </script>
 </body>
 </html>

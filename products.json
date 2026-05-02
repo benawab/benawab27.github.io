@@ -1,0 +1,19 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "محصول جدید",
+      "price": 99,
+      "desc": "توضیح کوتاه",
+      "about": "جزئیات محصول",
+      "delivery": "✈ FREE DELIVERY • 2-4 DAYS",
+      "ig": "https://instagram.com/prctmll",
+      "wa": "https://wa.me/989123456789?text=Hi",
+      "images": [
+        "https://picsum.photos/id/100/400/400",
+        "https://picsum.photos/id/101/400/400",
+        "https://picsum.photos/id/102/400/400"
+      ]
+    }
+  ]
+}

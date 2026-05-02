@@ -76,7 +76,7 @@
             text-decoration: none;
             font-size: 13px;
             letter-spacing: 2.5px;
-            transition: 0.35s;
+            transition: 0.44s;
             font-family: 'Times New Roman', serif;
             text-transform: uppercase;
             font-weight: 300;
@@ -84,7 +84,7 @@
         .menu a:hover {
             color: #ffd966;
             text-shadow: 0 0 6px rgba(255,215,0,0.5);
-            letter-spacing: 4px;
+            letter-spacing: 15px;
         }
 
         /* HERO SECTION */
@@ -310,7 +310,7 @@
     <a href="index.html">Home</a>
     <a href="shop.html">Shop</a>
     <a href="pack.html">gallary</a>
-    <a href="static.html">Static</a>
+    
 </div>
 
 <div class="hero">
@@ -371,7 +371,7 @@
 </div>
 
 <audio id="atmosAudio" loop style="display:none;">
-    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+    <source src="" type="audio/mpeg">
 </audio>
 
 <div class="static-footer">
@@ -447,3 +447,24 @@
 </script>
 </body>
 </html>
+
+
+
+<audio id="bgMusic" loop style="display:none;">
+    <source src="static.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+    (function() {
+        let audio = document.getElementById('bgMusic');
+        audio.volume = 0.3;
+        
+        // تلاش برای پخش خودکار
+        audio.play().catch(() => {
+            document.body.addEventListener('click', function playOnce() {
+                audio.play();
+                document.body.removeEventListener('click', playOnce);
+            }, { once: true });
+        });
+    })();
+</script>

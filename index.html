@@ -123,7 +123,7 @@
         nav a:hover {
             color: #ffffff;
             text-shadow: 0 0 6px rgba(255,255,255,0.7);
-            letter-spacing: 4px;
+            letter-spacing: 15px;
         }
 
         footer {
@@ -164,40 +164,107 @@
     <a href="static.html">Static</a>
 </nav>
 
-<!-- کاستم کورسر -->
+
+
 <style>
     body { cursor: none; }
     .custom-cursor {
         position: fixed;
-        width: 22px;
-        height: 22px;
+        width: 28px;
+        height: 28px;
         pointer-events: none;
         z-index: 9999;
         transform: translate(-50%, -50%);
-        transition: transform 0.1s ease;
+        transition: transform 0.08s linear, opacity 0.2s;
+        will-change: left, top;
     }
     .custom-cursor span {
-        font-size: 20px;
-        color: rgba(255,255,255,0.8);
-        text-shadow: 0 0 8px rgba(255,255,255,0.5);
-        animation: starPulse 2s ease-in-out infinite;
+        font-size: 22px;
+        color: #ffd966;
+        text-shadow: 0 0 6px rgb(255, 217, 0), 0 0 12px rgba(255,215,0,0.5);
+        animation: starGlow 2s ease-in-out infinite;
         display: inline-block;
     }
-    @keyframes starPulse {
-        0%, 100% { opacity: 0.6; transform: scale(1); }
-        50% { opacity: 1; transform: scale(1.2); text-shadow: 0 0 12px white; }
+    @keyframes starGlow {
+        0%, 100% { opacity: 0.7; transform: scale(1); text-shadow: 0 0 4px gold; }
+        50% { opacity: 1; transform: scale(1.2); text-shadow: 0 0 16px gold; }
+    }
+
+    /* بادبادک طلایی */
+    .gold-kite {
+        position: fixed;
+        pointer-events: none;
+        z-index: 10000;
+        font-size: 22px;
+        white-space: nowrap;
+        color: #ffd966;
+        text-shadow: 0 0 8px gold;
+        filter: drop-shadow(0 0 6px gold);
+        animation: kiteFly 1.7s ease-out forwards;
+    }
+    @keyframes kiteFly {
+        0% {
+            opacity: 1;
+            transform: translate(0, 0) rotate(0deg);
+        }
+        100% {
+            opacity: 0;
+            transform: translate(var(--tx, 120px), var(--ty, -180px)) rotate(540deg);
+            filter: blur(2px);
+        }
     }
 </style>
 
-<div class="custom-cursor" id="customCursor"><span>✦</span></div>
+
+
+<div class="custom-cursor" id="customCursor">
+    <span>✦</span>
+</div>
 
 <script>
     const cursor = document.getElementById('customCursor');
+    let mouseX = 0, mouseY = 0;
+    let cursorX = 0, cursorY = 0;
+
     document.addEventListener('mousemove', function(e) {
-        cursor.style.left = e.clientX + 'px';
-        cursor.style.top = e.clientY + 'px';
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+
+    function smoothMove() {
+        cursorX += (mouseX - cursorX) * 0.2;
+        cursorY += (mouseY - cursorY) * 0.2;
+        cursor.style.left = cursorX + 'px';
+        cursor.style.top = cursorY + 'px';
+        requestAnimationFrame(smoothMove);
+    }
+    smoothMove();
+
+    // بادبادک طلایی با کلیک
+    document.addEventListener('click', function(e) {
+        const star = document.createElement('div');
+        star.className = 'gold-kite';
+        star.innerText = '✴'
+        star.style.left = e.clientX + 'px';
+        star.style.top = e.clientY + 'px';
+        star.style.position = 'fixed';
+
+        const randomX = (Math.random() - 0.5) * 280;
+        const randomY = -120 - Math.random() * 150;
+        star.style.setProperty('--tx', randomX + 'px');
+        star.style.setProperty('--ty', randomY + 'px');
+
+        document.body.appendChild(star);
+
+        setTimeout(() => {
+            star.remove();
+        }, 1500);
     });
 </script>
+
+
+
+
 
 <div class="container">
     <div class="logo-wrapper">
@@ -338,3 +405,204 @@
 
 </body>
 </html>
+
+
+
+<audio id="bgMusic" loop style="display:none;">
+    <source src="Home.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+    (function() {
+        let audio = document.getElementById('bgMusic');
+        audio.volume = 0.3;
+        
+        // تلاش برای پخش خودکار
+        audio.play().catch(() => {
+            document.body.addEventListener('click', function playOnce() {
+                audio.play();
+                document.body.removeEventListener('click', playOnce);
+            }, { once: true });
+        });
+    })();
+</script>
+
+
+
+
+
+<!-- حلقه About Us -->
+<div class="about-ring" id="aboutRing">
+    <span>✦</span>
+</div>
+
+<div id="aboutModal" class="about-modal">
+    <div class="about-modal-content">
+        <div class="about-modal-header">
+            <span class="about-close">✕</span>
+            <h2>✦ ABOUT LUSICDUS ✦</h2>
+        </div>
+        <div class="about-modal-body">
+            <p>We don't just build websites — we craft <span class="gold">digital nightmares</span> and <span class="gold">dreamcore experiences</span>.</p>
+            <p>Every pixel is a whisper, every line of code a forgotten memory.</p>
+            <p>🖤 <span class="gold">We build websites for you.</span> 🖤</p>
+            <p>From dark minimalism to interactive 3D worlds.<br>Your vision, our haunting execution.</p>
+            <div class="about-signature">✦ LUSICDUS TEAM ✦</div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .about-ring {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        border: 1px solid rgba(255,255,255,0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 1000;
+        background: rgba(0,0,0,0.85);
+        backdrop-filter: blur(4px);
+        transition: transform 0.25s ease;
+        animation: breathe 3s ease-in-out infinite;
+    }
+    .about-ring span {
+        font-size: 20px;
+        color: #ffffff;
+        text-shadow: none;
+    }
+    .about-ring:hover {
+        transform: scale(1.2);
+        border-color: white;
+        background: black;
+        animation: none;
+    }
+    @keyframes breathe {
+        0% {
+            transform: scale(1);
+            opacity: 0.8;
+        }
+        50% {
+            transform: scale(1.08);
+            opacity: 1;
+            border-color: white;
+            box-shadow: 0 0 8px rgba(255,255,255,0.3);
+        }
+        100% {
+            transform: scale(1);
+            opacity: 0.8;
+        }
+    }
+
+    .about-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.94);
+        backdrop-filter: blur(20px);
+        z-index: 2000;
+        justify-content: center;
+        align-items: center;
+    }
+    .about-modal.active {
+        display: flex;
+    }
+    .about-modal-content {
+        max-width: 500px;
+        width: 85%;
+        background: #0a0a0f;
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 30px;
+        padding: 2rem;
+        text-align: center;
+        animation: modalPop 0.45s cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
+        transform-origin: top left;
+    }
+    @keyframes modalPop {
+        0% {
+            opacity: 0;
+            transform: scale(0.2) translate(-80px, -80px);
+        }
+        60% {
+            transform: scale(1.02);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1) translate(0, 0);
+        }
+    }
+    .about-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 0.8rem;
+        margin-bottom: 1.2rem;
+    }
+    .about-modal-header h2 {
+        font-size: 1.3rem;
+        letter-spacing: 4px;
+        color: #e0e0e0;
+    }
+    .about-close {
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #aaa;
+        transition: 0.3s;
+    }
+    .about-close:hover {
+        color: white;
+        transform: scale(1.1);
+    }
+    .about-modal-body p {
+        font-size: 0.9rem;
+        line-height: 1.6;
+        color: rgba(255,255,255,0.7);
+        margin-bottom: 1rem;
+    }
+    .gold {
+        color: #ccc;
+    }
+    .about-signature {
+        margin-top: 1.5rem;
+        font-size: 0.8rem;
+        letter-spacing: 3px;
+        color: #bbb;
+        font-style: italic;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        padding-top: 1rem;
+    }
+    @media (max-width: 650px) {
+        .about-ring { width: 32px; height: 32px; top: 12px; left: 12px; }
+        .about-ring span { font-size: 16px; }
+    }
+</style>
+
+<script>
+    const ringBtn = document.getElementById('aboutRing');
+    const modal = document.getElementById('aboutModal');
+    const closeBtn = document.querySelector('.about-close');
+
+    ringBtn.addEventListener('click', () => {
+        modal.classList.add('active');
+    });
+
+    closeBtn.addEventListener('click', () => {
+        modal.classList.remove('active');
+    });
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.remove('active');
+    });
+</script>
+
+
+

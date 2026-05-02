@@ -1,0 +1,19 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "GOLDEN ECHO",
+      "price": 490,
+      "desc": "Limited edition golden pendant. Timeless elegance.",
+      "about": "18k gold plated • black onyx • handcrafted • includes gift box.",
+      "delivery": "✈ FREE DELIVERY • 2-3 DAYS",
+      "ig": "https://instagram.com/prctmll",
+      "wa": "https://wa.me/989123456789?text=Hi%20GOLDEN%20ECHO",
+      "images": [
+        "https://picsum.photos/id/104/400/400",
+        "https://picsum.photos/id/104/300/300",
+        "https://picsum.photos/id/104/200/200"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل مدیریت - LUSICDUS Pixel Shop</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #0a0a0f;
+            font-family: 'Courier New', monospace;
+            color: #e0e0e0;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #ffd966;
+            border-bottom: 2px solid #ffd966;
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+        .product-card {
+            background: #151520;
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid #ffd966;
+        }
+        .product-card h3 {
+            color: #ffd966;
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            margin-top: 0.8rem;
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 4px;
+            background: #222;
+            border: 1px solid #444;
+            border-radius: 12px;
+            color: white;
+            font-family: monospace;
+        }
+        .image-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .image-group input {
+            flex: 1;
+        }
+        button {
+            background: #ffd966;
+            color: #0a0a0f;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 30px;
+            margin-top: 1rem;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        button.danger {
+            background: #a22;
+            color: white;
+        }
+        button.success {
+            background: #2a6f3f;
+            color: white;
+        }
+        button:hover {
+            transform: scale(1.02);
+        }
+        .save-all {
+            position: sticky;
+            bottom: 20px;
+            background: #0a0a0f;
+            padding: 1rem;
+            text-align: center;
+            border-top: 1px solid #ffd966;
+            margin-top: 2rem;
+        }
+        .add-btn {
+            background: #2a6f3f;
+            color: white;
+            margin: 1rem 0;
+        }
+        hr {
+            margin: 1rem 0;
+            border-color: #333;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>✦ پنل مدیریت LUSICDUS ✦</h1>
+    <p>ویرایش محصولات - پس از تغییر، دکمه «ذخیره همه» را بزنید و فایل JSON را جایگزین کنید.</p>
+    <button id="addProductBtn" class="add-btn">➕ افزودن محصول جدید</button>
+    <div id="productsContainer"></div>
+    <div class="save-all">
+        <button id="saveAllBtn">💾 ذخیره همه تغییرات (دانلود products.json)</button>
+    </div>
+</div>
+
+<script>
+    let products = [];
+
+    // بارگذاری محصولات از products.json
+    async function loadProducts() {
+        try {
+            const res = await fetch('products.json');
+            const data = await res.json();
+            products = data.products;
+        } catch(e) {
+            products = [];
+        }
+        render();
+    }
+
+    function escapeHtml(str) {
+        if(!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if(m === '&') return '&amp;';
+            if(m === '<') return '&lt;';
+            if(m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    function render() {
+        const container = document.getElementById('productsContainer');
+        container.innerHTML = '';
+        products.forEach((p, idx) => {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.innerHTML = `
+                <h3>📦 محصول #${p.id} — ${escapeHtml(p.name)}</h3>
+                <label>نام محصول:</label>
+                <input type="text" id="name-${idx}" value="${escapeHtml(p.name)}">
+                
+                <label>قیمت (دلار):</label>
+                <input type="number" id="price-${idx}" value="${p.price}">
+                
+                <label>توضیح کوتاه:</label>
+                <input type="text" id="desc-${idx}" value="${escapeHtml(p.desc)}">
+                
+                <label>لینک اینستاگرام:</label>
+                <input type="text" id="ig-${idx}" value="${p.ig || ''}">
+                
+                <label>لینک واتساپ:</label>
+                <input type="text" id="wa-${idx}" value="${p.wa || ''}">
+                
+                <label>جزئیات محصول (about):</label>
+                <textarea id="about-${idx}" rows="2">${escapeHtml(p.about)}</textarea>
+                
+                <label>تحویل (delivery):</label>
+                <input type="text" id="delivery-${idx}" value="${escapeHtml(p.delivery)}">
+                
+                <label>تصاویر (۳ لینک):</label>
+                <div class="image-group">
+                    <input type="text" id="img0-${idx}" value="${p.images[0] || ''}" placeholder="عکس اصلی">
+                    <input type="text" id="img1-${idx}" value="${p.images[1] || ''}" placeholder="تصویر دوم">
+                    <input type="text" id="img2-${idx}" value="${p.images[2] || ''}" placeholder="تصویر سوم">
+                </div>
+                <button class="danger" data-idx="${idx}">🗑 حذف محصول</button>
+                <hr>
+            `;
+            container.appendChild(card);
+        });
+
+        // attach delete events
+        document.querySelectorAll('.danger').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(btn.getAttribute('data-idx'));
+                products.splice(idx, 1);
+                products.forEach((p, i) => p.id = i + 1);
+                render();
+            });
+        });
+    }
+
+    // جمع‌آوری داده‌ها از فرم
+    function collectProducts() {
+        const updated = [];
+        for (let i = 0; i < products.length; i++) {
+            const old = products[i];
+            updated.push({
+                id: i+1,
+                name: document.getElementById(`name-${i}`)?.value || old.name,
+                price: parseInt(document.getElementById(`price-${i}`)?.value) || old.price,
+                desc: document.getElementById(`desc-${i}`)?.value || old.desc,
+                about: document.getElementById(`about-${i}`)?.value || old.about,
+                delivery: document.getElementById(`delivery-${i}`)?.value || old.delivery,
+                ig: document.getElementById(`ig-${i}`)?.value || old.ig,
+                wa: document.getElementById(`wa-${i}`)?.value || old.wa,
+                images: [
+                    document.getElementById(`img0-${i}`)?.value || old.images[0],
+                    document.getElementById(`img1-${i}`)?.value || old.images[1],
+                    document.getElementById(`img2-${i}`)?.value || old.images[2]
+                ]
+            });
+        }
+        return updated;
+    }
+
+    // افزودن محصول جدید
+    document.getElementById('addProductBtn').addEventListener('click', () => {
+        const newId = products.length + 1;
+        products.push({
+            id: newId,
+            name: "محصول جدید",
+            price: 99,
+            desc: "توضیح کوتاه",
+            about: "جزئیات محصول",
+            delivery: "✈ FREE DELIVERY • 2-4 DAYS",
+            ig: "https://instagram.com/prctmll",
+            wa: "https://wa.me/989123456789?text=Hi",
+            images: [
+                "https://picsum.photos/id/100/400/400",
+                "https://picsum.photos/id/101/400/400",
+                "https://picsum.photos/id/102/400/400"
+            ]
+        });
+        render();
+    });
+
+    // ذخیره و دانلود products.json
+    document.getElementById('saveAllBtn').addEventListener('click', () => {
+        const updatedProducts = collectProducts();
+        const output = { products: updatedProducts };
+        const dataStr = JSON.stringify(output, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'products.json';
+        a.click();
+        URL.revokeObjectURL(url);
+        alert('✅ فایل products.json ذخیره شد. آن را جایگزین فایل قبلی کنید.');
+    });
+
+    loadProducts();
+</script>
+</body>
+</html>
