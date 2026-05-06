@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LUSICDUS — Slow Breathing Saturn</title>
+    <title>LUSICDUS — Dark Dreamcore</title>
     <style>
         * {
             margin: 0;
@@ -37,7 +37,7 @@
             background-repeat: repeat;
             pointer-events: none;
             z-index: 2;
-            opacity: 0.6;
+            opacity: 0.5;
         }
 
         body::after {
@@ -74,8 +74,8 @@
             width: 100%;
             max-width: 320px;
             height: auto;
-            filter: drop-shadow(0 0 1px rgba(255,255,255,0.05));
-            opacity: 0.75;
+            filter: drop-shadow(0 0 20px rgba(255,255,255,0.08));
+            opacity: 0.85;
             will-change: transform;
         }
 
@@ -83,22 +83,19 @@
             font-size: 2rem;
             letter-spacing: 14px;
             text-transform: uppercase;
-            color: rgba(255,255,255,0.5);
+            color: rgba(255,255,255,0.75);
             font-weight: 300;
-            filter: blur(0.8px);
             margin-top: 1.5rem;
         }
 
         .haunting-line {
             font-size: 0.75rem;
-            letter-spacing: 4px;
-            color: rgba(255,255,255,0.25);
+            letter-spacing: 8px;
+            color: rgba(255,255,255,0.4);
             margin-top: 1.5rem;
             font-style: italic;
-            filter: blur(0.6px);
         }
 
-        /* منوی وسط بالا */
         nav {
             position: fixed;
             top: 20px;
@@ -108,10 +105,10 @@
             gap: 25px;
             background: rgba(0,0,0,0.55);
             backdrop-filter: blur(12px);
-            padding: 8px 25px;
+            padding: 8px 28px;
             border-radius: 60px;
             z-index: 100;
-            border: 0.5px solid rgba(255,255,255,0.1);
+            border: 0.5px solid rgba(255,255,255,0.15);
         }
 
         nav a {
@@ -126,7 +123,7 @@
 
         nav a:hover {
             color: #ffffff;
-            text-shadow: 0 0 6px rgba(255,255,255,0.7);
+            text-shadow: 0 0 6px rgba(255,255,255,0.5);
             letter-spacing: 15px;
         }
 
@@ -137,10 +134,9 @@
             width: 100%;
             text-align: center;
             font-size: 0.65rem;
-            color: rgba(255,255,255,0.12);
-            letter-spacing: 2px;
+            color: rgba(255,255,255,0.2);
+            letter-spacing: 3px;
             font-style: italic;
-            filter: blur(0.5px);
             z-index: 10;
         }
 
@@ -149,7 +145,6 @@
             100% { opacity: 1; transform: scale(1); filter: blur(0); }
         }
 
-        /* About Ring */
         .about-ring {
             position: fixed;
             top: 20px;
@@ -157,13 +152,13 @@
             width: 38px;
             height: 38px;
             border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.5);
+            border: 1px solid rgba(255,255,255,0.3);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             z-index: 1001;
-            background: rgba(0,0,0,0.85);
+            background: rgba(0,0,0,0.7);
             backdrop-filter: blur(4px);
             transition: transform 0.25s ease;
             animation: breathe 3s ease-in-out infinite;
@@ -171,7 +166,6 @@
         .about-ring span {
             font-size: 20px;
             color: #ffffff;
-            text-shadow: none;
         }
         .about-ring:hover {
             transform: scale(1.2);
@@ -180,12 +174,11 @@
             animation: none;
         }
         @keyframes breathe {
-            0% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.08); opacity: 1; border-color: white; box-shadow: 0 0 8px rgba(255,255,255,0.3); }
-            100% { transform: scale(1); opacity: 0.8; }
+            0% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.08); opacity: 1; border-color: white; box-shadow: 0 0 10px rgba(255,255,255,0.1); }
+            100% { transform: scale(1); opacity: 0.7; }
         }
 
-        /* Modal About */
         .about-modal {
             display: none;
             position: fixed;
@@ -193,7 +186,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.94);
+            background: rgba(0,0,0,0.96);
             backdrop-filter: blur(20px);
             z-index: 2000;
             justify-content: center;
@@ -206,7 +199,7 @@
             max-width: 500px;
             width: 85%;
             background: #0a0a0f;
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.15);
             border-radius: 30px;
             padding: 2rem;
             text-align: center;
@@ -248,19 +241,18 @@
             margin-bottom: 1rem;
         }
         .gold {
-            color: #ccc;
+            color: #e0e0e0;
         }
         .about-signature {
             margin-top: 1.5rem;
             font-size: 0.8rem;
             letter-spacing: 3px;
-            color: #bbb;
+            color: #aaa;
             font-style: italic;
             border-top: 1px solid rgba(255,255,255,0.1);
             padding-top: 1rem;
         }
 
-        /* Custom Cursor & Gold Kite */
         body { cursor: none; }
         .custom-cursor {
             position: fixed;
@@ -269,19 +261,19 @@
             pointer-events: none;
             z-index: 9999;
             transform: translate(-50%, -50%);
-            transition: transform 0.08s linear, opacity 0.2s;
+            transition: transform 0.08s linear;
             will-change: left, top;
         }
         .custom-cursor span {
             font-size: 22px;
-            color: #ffd966;
-            text-shadow: 0 0 6px rgb(255, 217, 0), 0 0 12px rgba(255,215,0,0.5);
+            color: #ffffff;
+            text-shadow: 0 0 6px rgba(255,255,255,0.3);
             animation: starGlow 2s ease-in-out infinite;
             display: inline-block;
         }
         @keyframes starGlow {
-            0%, 100% { opacity: 0.7; transform: scale(1); text-shadow: 0 0 4px gold; }
-            50% { opacity: 1; transform: scale(1.2); text-shadow: 0 0 16px gold; }
+            0%, 100% { opacity: 0.7; transform: scale(1); text-shadow: 0 0 4px rgba(255,255,255,0.3); }
+            50% { opacity: 1; transform: scale(1.2); text-shadow: 0 0 16px rgba(255,255,255,0.5); }
         }
         .gold-kite {
             position: fixed;
@@ -289,26 +281,19 @@
             z-index: 10000;
             font-size: 22px;
             white-space: nowrap;
-            color: #ffd966;
-            text-shadow: 0 0 8px gold;
-            filter: drop-shadow(0 0 6px gold);
+            color: #ffffff;
+            text-shadow: 0 0 8px rgba(255,255,255,0.3);
+            filter: drop-shadow(0 0 6px rgba(255,255,255,0.2));
             animation: kiteFly 1.7s ease-out forwards;
         }
         @keyframes kiteFly {
-            0% {
-                opacity: 1;
-                transform: translate(0, 0) rotate(0deg);
-            }
-            100% {
-                opacity: 0;
-                transform: translate(var(--tx, 120px), var(--ty, -180px)) rotate(540deg);
-                filter: blur(2px);
-            }
+            0% { opacity: 1; transform: translate(0, 0) rotate(0deg); }
+            100% { opacity: 0; transform: translate(var(--tx, 120px), var(--ty, -180px)) rotate(540deg); filter: blur(2px); }
         }
 
         @media (max-width: 650px) {
             .brand-text { font-size: 1.1rem; letter-spacing: 6px; }
-            .haunting-line { font-size: 0.6rem; }
+            .haunting-line { font-size: 0.6rem; letter-spacing: 4px; }
             nav { gap: 12px; padding: 5px 15px; top: 12px; }
             nav a { font-size: 9px; letter-spacing: 1px; }
             .logo-svg { max-width: 240px; }
@@ -319,18 +304,15 @@
 </head>
 <body>
 
-<!-- منو (وسط بالا) -->
 <nav>
     <a href="store.html">store</a>
     <a href="void.html">brand</a>
 </nav>
 
-<!-- About Ring (گوشه چپ بالا) -->
 <div class="about-ring" id="aboutRing">
     <span>✦</span>
 </div>
 
-<!-- مودال About Us -->
 <div id="aboutModal" class="about-modal">
     <div class="about-modal-content">
         <div class="about-modal-header">
@@ -338,16 +320,15 @@
             <h2>✦ ABOUT LUSICDUS ✦</h2>
         </div>
         <div class="about-modal-body">
-            <p>We don't just build websites — we craft <span class="gold">digital nightmares</span> and <span class="gold">dreamcore experiences</span>.</p>
-            <p>Every pixel is a whisper, every line of code a forgotten memory.</p>
-            <p>🖤 <span class="gold">We build websites for you.</span> 🖤</p>
-            <p>From dark minimalism to interactive 3D worlds.<br>Your vision, our haunting execution.</p>
-            <div class="about-signature">✦ LUSICDUS TEAM ✦</div>
+            <p>We build quiet empires.<br>Digital fortresses where luxury meets shadow.</p>
+            <p>No noise. No trends.<br>Just timeless architecture and 3D dimensions that breathe.</p>
+            <p>Your vision. Our execution.<br>An eternal signature.</p>
+            <p>🖤 <span class="gold">LUSICDUS — we build for those who notice</span> 🖤</p>
+            <div class="about-signature">✦ it's watching you • nothing ever ends here ✦</div>
         </div>
     </div>
 </div>
 
-<!-- Custom Cursor -->
 <div class="custom-cursor" id="customCursor">
     <span>✦</span>
 </div>
@@ -359,7 +340,7 @@
                 <linearGradient id="ringFade" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" stop-color="white" stop-opacity="0.02"/>
                     <stop offset="25%" stop-color="white" stop-opacity="0.5"/>
-                    <stop offset="50%" stop-color="white" stop-opacity="0.7"/>
+                    <stop offset="50%" stop-color="white" stop-opacity="0.8"/>
                     <stop offset="75%" stop-color="white" stop-opacity="0.5"/>
                     <stop offset="100%" stop-color="white" stop-opacity="0.02"/>
                 </linearGradient>
@@ -381,12 +362,12 @@
                 </filter>
             </defs>
 
-            <circle cx="150" cy="140" r="100" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="0.8" stroke-dasharray="3 7"/>
+            <circle cx="150" cy="140" r="100" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="0.8" stroke-dasharray="3 7"/>
             <circle cx="150" cy="140" r="115" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="0.4" stroke-dasharray="1 9"/>
-            <circle cx="150" cy="140" r="80" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="0.5" stroke-dasharray="5 5"/>
+            <circle cx="150" cy="140" r="80" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="0.5" stroke-dasharray="5 5"/>
 
             <circle cx="150" cy="140" r="65" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-dasharray="200 5 30 8"/>
-            <circle cx="150" cy="140" r="60" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="0.6" stroke-dasharray="10 4"/>
+            <circle cx="150" cy="140" r="60" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="0.6" stroke-dasharray="10 4"/>
             
             <path fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.2" d="M 110 105 L 125 120 L 115 140 L 130 155"/>
             <path fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="0.9" d="M 170 125 L 185 140 L 175 165 L 190 180"/>
@@ -398,8 +379,8 @@
             <path fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="0.5" d="M 75 180 L 65 170 L 80 185"/>
 
             <ellipse cx="150" cy="140" rx="120" ry="30" fill="none" stroke="url(#ringFade)" stroke-width="2.5" stroke-dasharray="150 10 25 8" filter="url(#ghostBlur)"/>
-            <ellipse cx="150" cy="140" rx="108" ry="24" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="0.9" stroke-dasharray="4 6"/>
-            <ellipse cx="150" cy="140" rx="132" ry="36" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="0.5" stroke-dasharray="8 12" transform="rotate(-5 150 140)"/>
+            <ellipse cx="150" cy="140" rx="108" ry="24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="0.9" stroke-dasharray="4 6"/>
+            <ellipse cx="150" cy="140" rx="132" ry="36" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5" stroke-dasharray="8 12" transform="rotate(-5 150 140)"/>
 
             <line x1="150" y1="40" x2="150" y2="220" stroke="url(#fadeVertical)" stroke-width="2" filter="url(#brutalGlow)"/>
 
@@ -429,7 +410,6 @@
 
 <script>
     (function() {
-        // Cursor movement
         const cursor = document.getElementById('customCursor');
         let mouseX = 0, mouseY = 0;
         let cursorX = 0, cursorY = 0;
@@ -448,11 +428,10 @@
         }
         smoothMove();
 
-        // Gold kite on click
         document.addEventListener('click', function(e) {
             const star = document.createElement('div');
             star.className = 'gold-kite';
-            star.innerText = '✴';
+            star.innerText = '✦';
             star.style.left = e.clientX + 'px';
             star.style.top = e.clientY + 'px';
             star.style.position = 'fixed';
@@ -466,7 +445,6 @@
             setTimeout(() => star.remove(), 1500);
         });
 
-        // Saturn rings rotation
         const rings = document.querySelectorAll('.logo-svg ellipse');
         if (rings.length) {
             let angle = 0;
@@ -484,7 +462,6 @@
             animateRings();
         }
 
-        // Breathing and zoom
         const svgLogo = document.querySelector('.logo-svg');
         if (svgLogo) {
             let time = 0;
@@ -495,9 +472,9 @@
                 svgLogo.style.transform = `scale(${zoom})`;
                 svgLogo.style.opacity = opacity;
                 if (Math.floor(time) % 80 === 0 && time > 0) {
-                    svgLogo.style.filter = 'blur(1.5px) drop-shadow(0 0 6px rgba(255,255,255,0.1))';
+                    svgLogo.style.filter = 'blur(1.5px) drop-shadow(0 0 10px rgba(255,255,255,0.1))';
                     setTimeout(() => {
-                        svgLogo.style.filter = 'drop-shadow(0 0 2px rgba(255,255,255,0.05))';
+                        svgLogo.style.filter = 'drop-shadow(0 0 2px rgba(255,255,255,0.03))';
                     }, 200);
                 }
                 requestAnimationFrame(breatheZoom);
@@ -505,7 +482,6 @@
             breatheZoom();
         }
 
-        // Modal handlers
         const ringBtn = document.getElementById('aboutRing');
         const modal = document.getElementById('aboutModal');
         const closeBtn = document.querySelector('.about-close');
@@ -518,9 +494,8 @@
     })();
 </script>
 
-<!-- موزیک پس‌زمینه -->
 <audio id="pageMusic" loop preload="auto">
-    <source src="homee.mp3" type="audio/mpeg">
+    <source src="idk.mp3" type="audio/mpeg">
 </audio>
 
 <script>
@@ -540,3 +515,6 @@
 
 </body>
 </html>
+
+
+
